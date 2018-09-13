@@ -24,7 +24,7 @@ wirte_boolean()：写入逻辑型数据
 write_url()：写入超链接型数据
 '''
 worksheet.write('A1', 'Hello World', str_format)
-worksheet.write(1, 0, '1 and 1', )
+worksheet.write(0, 5, '1 and 1', str_format)
 
 
 '''
