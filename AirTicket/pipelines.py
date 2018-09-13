@@ -5,6 +5,9 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
+"""
+定义存储方式
+"""
 
 class AirticketPipeline(object):
     def process_item(self, item, spider):

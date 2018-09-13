@@ -1,4 +1,30 @@
-user_agent_list = [
+# -*- coding: utf-8 -*-
+
+
+"""避免被ban策略之一：使用useragent池。
+使用注意：需在settings.py中进行相应的设置。
+"""
+
+import random
+from scrapy.contrib.downloadermiddleware.useragent import UserAgentMiddleware
+
+
+class RandomUserAgentMiddleware(UserAgentMiddleware):
+    def __init__(self, user_agent=''):
+        self.user_agent = user_agent
+
+    def process_request(self, request, spider):
+        ua = random.choice(self.user_agent_list)
+        if ua:
+            # 显示当前使用的useragent
+            print("********Current UserAgent:%s************" % ua)
+
+            # 记录
+            request.headers.setdefault('User-Agent', ua)
+
+    # the default user_agent_list composes chrome,I E,firefox,Mozilla,opera,netscape
+    # for more user agent strings,you can find it in http://www.useragentstring.com/pages/useragentstring.php
+    user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 "
         "(KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
         "Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 "
@@ -36,5 +62,3 @@ user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 "
         "(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"
     ]
-
-print(user_agent_list[0])

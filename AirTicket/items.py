@@ -5,6 +5,10 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
 
+"""
+定义需要获取的字段
+"""
+
 import scrapy
 
 
