@@ -1,0 +1,13 @@
+Cache-Control: max-age=300
+X-Aspnetmvc-Version: 4.0
+X-Powered-By: ASP.NET
+Set-Cookie: acw_tc=781bad2415369042160235168e5fad8a8e48efefe842e231af3105e418f6f2;path=/;HttpOnly;Max-Age=2678400
+Expires: Fri, 14 Sep 2018 05:55:15 GMT
+Vary: Accept-Encoding
+X-Cache: MISS
+Server: nginx
+Date: Fri, 14 Sep 2018 05:50:16 GMT
+Content-Encoding: gzip
+Strict-Transport-Security: max-age=86400;
+Content-Type: text/html; charset=utf-8
+X-Aspnet-Version: 4.0.30319
