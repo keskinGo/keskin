@@ -16,6 +16,7 @@ NEWSPIDER_MODULE = 'AirTicket.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
+# 已创建UA池，不需要单个配置
 # USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
 
 # Obey robots.txt rules
@@ -73,9 +74,15 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'AirTicket.pipelines.AirticketPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'AirTicket.pipelines.AirticketPipeline': 300,
+}
+
+MYSQL_HOST = '127.0.0.1'
+MYSQL_DBNAME = 'airticket'
+MYSQL_USER = 'root'
+MYSQL_PASSWD = '123456'
+MYSQL_PORT = 3306
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -93,7 +100,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Enable and configure HTTP caching (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 
-# 取消这几行注释的作用是：scrapy会缓存哟经存在的Requests，当再次请求时，如果有缓存文档则返回缓存文档
+# 取消这几行注释的作用是：scrapy会缓存已经存在的Requests，当再次请求时，如果有缓存文档则返回缓存文档
 # 加快本地调试速度，页减轻了网站的压力
 HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
