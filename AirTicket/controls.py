@@ -2,8 +2,13 @@
 
 from urllib.parse import urlencode
 
+import AirTicket.constant as cons
 
 class FactoryCallInterface:
+    """
+    create()：根据url初始化对应的对象
+    """
+
     def __init__(self, fixed_url, find_scope):
         self.fixed_url = fixed_url  # 请求地址中的固定部分
         self.find_scope = find_scope  # 搜索范围（0国内，1国际）
@@ -14,11 +19,24 @@ class FactoryCallInterface:
         :return:
         """
         # 春秋航空
-        if self.fixed_url == 'https://flights.ch.com/':
-            return ChunqiuTicketInfos(self.fixed_url, self.find_scope)
+        if 'https://flights.ch.com/' in self.fixed_url:
+            return ChunqiuTicketInfos(self.fixed_url, self.find_scope), '春秋'
+        # 去哪儿
+        elif 'https://flight.qunar.com' in self.fixed_url:
+            return QunaTicketInfos(self.fixed_url, self.find_scope), '去哪儿'
+        else:
+            raise '没有收纳'
 
 
 class TicketInfos:
+    """
+    get_url()：调用get_inland_url或get_abroad_url，返回完整的url（不用重写）
+    get_url_head()：获取url中，参数之前的地址
+    get_inland_url()：按照国内机票的规则，拼接出url
+    get_abroad_url()：按照国际机票的规则，拼接出url
+    get_search_args()：获取搜索参数（必须重写）
+    """
+
     def __init__(self, fixed_url, find_scope):
         self.fixed_url = fixed_url
         self.find_scope = find_scope
@@ -47,7 +65,9 @@ class TicketInfos:
         :param kwargs:
         :return:
         """
-        pass
+        url_head = self.get_url_head()
+        url = url_head + urlencode(kwargs)
+        return url
 
     def get_abroad_url(self, **kwargs):
         """
@@ -55,14 +75,19 @@ class TicketInfos:
         :param kwargs:
         :return:
         """
-        pass
+        url_head = self.get_url_head()
+        url = url_head + urlencode(kwargs)
+        return url
 
-    def get_search_scope(self):
+    def get_search_args(self):
         """
         获取搜索参数
         :return:
         """
-        return [{}]
+        result = []
+        search_info = {}
+        result.append(search_info)
+        return result
 
 
 class ChunqiuTicketInfos(TicketInfos):
@@ -76,67 +101,59 @@ class ChunqiuTicketInfos(TicketInfos):
         获取国内机票的完整url
         :return:
         """
-        data = {}
-        data['Departure'] = kwargs.get('Departure')  # 出发地
-        data['Arrival'] = kwargs.get('Arrival')  # 目的地
-        data['FDate'] = kwargs.get('FDate')  # 去程时间
-        data['RetDate'] = kwargs.get('RetDate')  # 返程时间
-        data['ANum'] = kwargs.get('ANum', 1)  # 成人数（12岁以上）
-        data['CNum'] = kwargs.get('CNum', 0)  # 小孩数（2--12岁）
-        data['INum'] = kwargs.get('INum', 0)  # 婴儿数（2岁以下）
-        data['MType'] = kwargs.get('MType', 0)  #
-        data['IfRet'] = kwargs.get('IfRet', 'true')  #
-        data['SType'] = kwargs.get('SType', '01')  #
-        data['isBg'] = kwargs.get('isBg', 'false')  #
-        data['IsJC'] = kwargs.get('IsJC', 'false')  #
-        data['IsNew'] = kwargs.get('IsNew', 1)  #
-
-        url_head = self.get_url_head()
-        url = url_head + urlencode(data)
+        url = self.fixed_url
         return url
 
-    def get_url_head(self):
-        departure_code = 'SHA'
-        arrival_code = 'SZX'
-        url_head = self.fixed_url + 'Round-%s-%s.html?' % (departure_code, arrival_code)
-        return url_head
+    # def get_url_head(self):
+    #     departure_code = cons.AIRPORT_CODE_MAP.get(self.departure)
+    #     arrival_code = cons.AIRPORT_CODE_MAP.get(self.arrival)
+    #     url_head = self.fixed_url + 'Round-%s-%s.html?' % (departure_code, arrival_code)
+    #     url_head = self.fixed_url
+    #     return url_head
 
-    def get_search_scope(self):
+    def get_search_args(self):
         """
-        获取搜索范围：出发地，目的地，出发时间，返程时间
-        :return:
+        获取搜索参数：出发地，目的地，出发时间，返程时间， ……
+        :return: [{参数字典1}, {参数字典2}, ]
         """
         result = []
         search_info = {}
-        search_info['Departure'] = '上海'
-        search_info['Arrival'] = '沈阳'
-        search_info['FDate'] = '2018-10-01'
-        search_info['RetDate'] = '2018-10-10'
+        search_info['ActId'] = '0'
+        # search_info['Active9s'] = None
+        search_info['Arrival'] = '深圳'  # 目的地
+        search_info['CabinActId'] = 'null'
+        search_info['Currency'] = '0'
+        search_info['Departure'] = '上海'  # 始发地
+        search_info['DepartureDate'] = '2018-10-03'  # 出发时间
+        search_info['IfRet'] = 'false'
+        search_info['IsBg'] = 'false'
+        search_info['IsEmployee'] = 'false'
+        search_info['IsIJFlight'] = 'false'
+        search_info['IsJC'] = 'false'
+        search_info['IsLittleGroupFlight'] = 'false'
+        search_info['IsShowTaxprice'] = 'false'
+        search_info['ReturnDate'] = 'null'
+        search_info['SType'] = '0'
+        search_info['SeatsNum'] = '1'
+        search_info['isdisplayold'] = 'false'
         result.append(search_info)
         return result
 
 
 class QunaTicketInfos(TicketInfos):
-    def get_url(self):
+    def get_search_args(self):
         """
-        去哪儿类
-        :return:
+        获取搜索范围：出发地，目的地，出发时间，返程时间， ……
+        :return: [{参数字典1}, {参数字典2}, ]
         """
-        data = {}
-        data['fromCity'] = '成都'
-        data['toCity'] = '南京'
-        data['fromDate'] = '2018-11-04'
-        data['toDate'] = '2018-11-10'
-        data['fromCode'] = 'CTU'
-        data['toCode'] = 'NYC'
-        data['from'] = 'flight_dom_search'  # 猜测：flight_dom_search国内，flight_int_search国际
-        data['lowestPrice'] = 'null'
-        # data['isInter'] = 'true'
-        # data['favoriteKey'] = ''
-        # data['showTotalPr'] = 'null'
-        # data['adultNum'] = '1'
-        # data['childNum'] = '0'
-        # data['cabinClass'] = ''
-        url_head = "https://flight.qunar.com/site/roundtrip_list_new.htm?"  # interroundtrip_compare是什么鬼？
-        url = url_head + urlencode(data)
-        return url
+        result = []
+        search_info = {}
+        search_info['departureCity'] = '成都'
+        search_info['arrivalCity'] = '南京'
+        search_info['departureDate'] = '2018-11-04'
+        search_info['ex_track'] = None
+        search_info['__m__'] = 'f5c3203e925a730f9e41fcea070ba44c'
+        search_info['sort'] = None
+        result.append(search_info)
+
+        return result
