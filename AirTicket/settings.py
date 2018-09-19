@@ -75,7 +75,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'AirTicket.pipelines.AirticketPipeline': 300,
+   'AirTicket.pipelines.AirticketMongoDBPipeline': 300,
 }
 
 MYSQL_HOST = '127.0.0.1'
@@ -83,6 +83,9 @@ MYSQL_DBNAME = 'airticket'
 MYSQL_USER = 'root'
 MYSQL_PASSWD = '123456'
 MYSQL_PORT = 3306
+
+MONGODB_URI = 'mongodb://127.0.0.1:27017'
+MONGODB_DB_NAME = 'ticketdb'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

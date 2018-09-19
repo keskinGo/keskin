@@ -47,17 +47,19 @@ class Ticket(scrapy.Spider):
         for search_info in search_infos:
             url = ticket_instance.get_url(**search_info)
             print('url:', url)
+            # post请求
             yield scrapy.FormRequest(url=url,
                                      formdata=search_info,
                                      callback=self.parse,
                                      meta={'source_code': source_code})
+            # get请求
             # yield Request(url, callback=self.parse)  # 回调函数，需要哪个方法来处理，则调用对应的方法
 
     # 爬取方法
     def parse(self, response):
-        filename = 'test.html'
-        with open(filename, 'w') as f:
-            f.write(response.text)
+        # filename = 'test.html'
+        # with open(filename, 'w') as f:
+        #     f.write(response.text)
 
         all_infos = json.loads(response.text)
         ticket_infos = all_infos['Route']
@@ -84,5 +86,5 @@ class Ticket(scrapy.Spider):
             item['is_non_stop'] = constant.IS_NON_STOP  # 是否直飞，１是，０否
             item['total_time'] = ticket_info['FlightTime']  # 总耗时
             item['discount_rate'] = None  # 折扣率
-            print('*********************************', item)
+            # print('*********************************', item)
             yield item
