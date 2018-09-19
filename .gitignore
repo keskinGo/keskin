@@ -63,3 +63,5 @@ db.sqlite3
 #source settings
 .settings/
 log/*.lock
+
+.scrapy/httpcache/*
