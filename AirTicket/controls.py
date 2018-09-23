@@ -2,7 +2,10 @@
 
 from urllib.parse import urlencode
 
-import AirTicket.constant as cons
+import datetime
+
+import AirTicket.constant as constant
+
 
 class FactoryCallInterface:
     """
@@ -105,8 +108,8 @@ class ChunqiuTicketInfos(TicketInfos):
         return url
 
     # def get_url_head(self):
-    #     departure_code = cons.AIRPORT_CODE_MAP.get(self.departure)
-    #     arrival_code = cons.AIRPORT_CODE_MAP.get(self.arrival)
+    #     departure_code = constant.AIRPORT_CODE_MAP.get(self.departure)
+    #     arrival_code = constant.AIRPORT_CODE_MAP.get(self.arrival)
     #     url_head = self.fixed_url + 'Round-%s-%s.html?' % (departure_code, arrival_code)
     #     url_head = self.fixed_url
     #     return url_head
@@ -117,26 +120,30 @@ class ChunqiuTicketInfos(TicketInfos):
         :return: [{参数字典1}, {参数字典2}, ]
         """
         result = []
-        search_info = {}
-        search_info['ActId'] = '0'
-        # search_info['Active9s'] = None
-        search_info['Arrival'] = '深圳'  # 目的地
-        search_info['CabinActId'] = 'null'
-        search_info['Currency'] = '0'
-        search_info['Departure'] = '上海'  # 始发地
-        search_info['DepartureDate'] = '2018-10-03'  # 出发时间
-        search_info['IfRet'] = 'false'
-        search_info['IsBg'] = 'false'
-        search_info['IsEmployee'] = 'false'
-        search_info['IsIJFlight'] = 'false'
-        search_info['IsJC'] = 'false'
-        search_info['IsLittleGroupFlight'] = 'false'
-        search_info['IsShowTaxprice'] = 'false'
-        search_info['ReturnDate'] = 'null'
-        search_info['SType'] = '0'
-        search_info['SeatsNum'] = '1'
-        search_info['isdisplayold'] = 'false'
-        result.append(search_info)
+        begin_date = constant.NOW_DATE
+
+        for i in range(2):  # 查询今后90天的信息
+            search_info = {}
+            departure_date = (begin_date + datetime.timedelta(days=i + 1)).strftime("%Y-%m-%d")
+            search_info['ActId'] = '0'
+            # search_info['Active9s'] = None
+            search_info['Arrival'] = '深圳'  # 目的地
+            search_info['CabinActId'] = 'null'
+            search_info['Currency'] = '0'
+            search_info['Departure'] = '上海'  # 始发地
+            search_info['DepartureDate'] = departure_date  # 出发时间
+            search_info['IfRet'] = 'false'
+            search_info['IsBg'] = 'false'
+            search_info['IsEmployee'] = 'false'
+            search_info['IsIJFlight'] = 'false'
+            search_info['IsJC'] = 'false'
+            search_info['IsLittleGroupFlight'] = 'false'
+            search_info['IsShowTaxprice'] = 'false'
+            search_info['ReturnDate'] = 'null'
+            search_info['SType'] = '0'
+            search_info['SeatsNum'] = '1'  # 座位数量
+            search_info['isdisplayold'] = 'false'
+            result.append(search_info)
         return result
 
 
