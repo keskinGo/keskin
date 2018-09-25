@@ -65,3 +65,4 @@ db.sqlite3
 log/*.lock
 
 .scrapy/httpcache/*
+*__pycache__*
