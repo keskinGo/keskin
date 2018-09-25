@@ -15,6 +15,7 @@ import scrapy
 class AirticketItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+
     source_code = scrapy.Field()  # 来源，详见SOURCE_NAME_TO_CODE
     search_time = scrapy.Field()  # 查询价格的时间（yyyy-mm-dd hh:mi:ss）
     departure_station = scrapy.Field()  # 始发站
