@@ -79,6 +79,7 @@ def check_proxy_isvalid(proxy):
         telnet.close()
         return True
 
+
 def get_a_new_valid_proxy():
     """
     获取一个全新可用的代理
@@ -90,6 +91,7 @@ def get_a_new_valid_proxy():
         for proxy in new_proxy_list:
             if check_proxy_isvalid(proxy):
                 return proxy
+
 
 def get_a_valid_proxy():
     """
